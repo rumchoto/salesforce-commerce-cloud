@@ -24,6 +24,7 @@ var ServiceFactory = require('~/cartridge/scripts/util/ServiceFactory');
 
 /**
  * @function
+ * 
  * @name run
  * @description The main function.
  * @returns {dw.system.Status} The exit status for the job step
@@ -101,13 +102,36 @@ var run = function run() {
 					Logger.info('Export file: ' + file);
 					
 					//call service, returns success or error
+					Logger.error("FeedUploadService: " + JSON.stringify(FeedUploadService.getConfiguration()));
+					Logger.error("FeedUploadService2: " + FeedUploadService.getRequestData());
+					Logger.error("FeedUploadService2.1: " + FeedUploadService.configuration);
 					var feedUploadResult = FeedUploadService.call(requestDataContainer);
+					Logger.error("FeedUploadService3: " + FeedUploadService.getRequestData());
+					Logger.error("FeedUploadService4: " + FeedUploadService.getResponse());
 
 					if (feedUploadResult.error) { 
 						Logger.error('Feed upload service error: ' + feedUploadResult.error + ' ' + feedUploadResult.errorMessage);
 					}
 				
 					if (!feedUploadResult.isOk()) {
+						Logger.error('requestDataContainer is something?: ' + JSON.stringify(requestDataContainer));
+						Logger.error('requestDataContainer is something1?: ' + JSON.stringify(requestDataContainer.requestMethod));
+						Logger.error('requestDataContainer is something1.5?: ' + JSON.stringify(requestDataContainer.path));
+						Logger.error('requestDataContainer is something1.75?: ' + JSON.stringify(requestDataContainer.outfile));
+						Logger.error('requestDataContainer is something2?: ' + JSON.stringify(requestDataContainer.args));
+						for each (var arg in requestDataContainer.args) {
+							if (arg.getName() == "file") {
+								Logger.error('requestDataContainer is something3?: ' + arg.getName() + " = " + arg.getStringValue());
+							} else {
+								Logger.error('requestDataContainer is something3?: ' + arg.getName() + " = " + arg.getStringValue());
+							}
+						}
+						Logger.error('Feed upload service is something?: ' + feedUploadResult.getMsg());
+						Logger.error('Feed upload service is something 2?: ' + feedUploadResult.getStatus());
+						Logger.error('Feed upload service is something 3?: ' + feedUploadResult.getErrorMessage());
+						Logger.error('Feed upload service is something 4?: ' + feedUploadResult.toString());
+						Logger.error('Feed upload service is not ok: ' + feedUploadResult.isOk());
+						Logger.error('Feed upload service object: ' + JSON.stringify(feedUploadResult));
 						return new Status(Status.ERROR, 'ERROR', 'FAILED uploading file with XML file name : ' + file.fullPath + '\nerror:' + feedUploadResult.errorMessage);
 					} else {
 						// Archive file

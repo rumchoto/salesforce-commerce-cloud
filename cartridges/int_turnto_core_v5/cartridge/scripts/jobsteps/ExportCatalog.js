@@ -132,6 +132,7 @@ function process( product, parameters, stepExecution )
 	//and formatted output such as ```{ "en_us": "Row data for English US", ...}``` 
 	var json = {};
 
+
 	try {
 
 		//Non-localized data
@@ -252,6 +253,9 @@ function process( product, parameters, stepExecution )
 			var locales = key.locales;
 			//CATEGORY
 			//Leaving blank because CATEGORYPATHJSON is populated
+			
+			// Use this to check for baseSiteURL variable, which will be used to construct product URLs if present
+			var baseSiteURL = key.baseSiteURL;
 
 			//KEYWORDS
 			var keywords = '';
@@ -279,6 +283,14 @@ function process( product, parameters, stepExecution )
 			}
 			var defaultLocale = Site.getCurrent().getDefaultLocale();
 			request.setLocale(defaultLocale);
+			
+			var productURL = '';
+			if (baseSiteURL) {
+				productURL = baseSiteURL.concat(URLUtils.url('Product-Show', 'pid', product.getID()).toString());
+			} else {
+				productURL = URLUtils.http('Product-Show', 'pid', product.getID()).toString();
+			}
+			
 			//build locale JSON
 			var localejson = {
 					sku : 				TurnToHelper.replaceNull(product.getID(), ""),
@@ -287,7 +299,7 @@ function process( product, parameters, stepExecution )
 					price : 			TurnToHelper.replaceNull(priceStr, ""),
 					currency : 			TurnToHelper.replaceNull(price.getCurrencyCode(), ""),
 					active : 			product.getAvailabilityModel().isOrderable() ? "Y" : "N",
-					itemurl:			URLUtils.http('Product-Show', 'pid', product.getID()).toString(),
+					itemurl:			productURL,
 					category : 			'', //Leaving blank because CATEGORYPATHJSON is populated
 					keywords : 			TurnToHelper.replaceNull(keywords, ""),
 					instock : 			product.getOnlineFlag() ? "Y" : "N",

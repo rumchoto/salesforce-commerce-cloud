@@ -141,12 +141,11 @@ var ServiceFactory = {
 		arrayOfRequestParts.push(new dw.net.HTTPRequestPart('authKey', authKey));
 		arrayOfRequestParts.push(new dw.net.HTTPRequestPart('feedStyle', 'tab-style.1'));
 
-		var url = "http://" + domain + postFileLocation;
+		var url = "https://" + domain + postFileLocation;
 
 		var requestDataContainer = {
 			requestMethod: 'POST',
 			path: url,
-			outfile: file,
 			args: arrayOfRequestParts
 		};
 

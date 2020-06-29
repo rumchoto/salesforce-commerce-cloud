@@ -1,5 +1,7 @@
 'use strict';
 
+var Logger = require('dw/system/Logger');
+
 /**
  * Feed Download Service
  *
@@ -24,12 +26,18 @@ var serviceConfig = {
         var request;
 
         service.URL = requestDataContainer.path;
-        service.setOutFile(requestDataContainer.outfile);
         service.requestMethod = requestDataContainer.requestMethod;
 
         var client = service.getClient();
+        client.setTimeout(-1);
         client.open("POST", requestDataContainer.path);
-        client.sendMultiPart( requestDataContainer.args);
+        result = client.sendMultiPart( requestDataContainer.args);
+        Logger.error("result: " + result);
+        Logger.error("text?: " + client.getText());
+        Logger.error("text?: " + client.getStatusMessage());
+        Logger.error("requestDataContainer: " + JSON.stringify(requestDataContainer));
+        Logger.error("error?: " + client.getErrorText());
+        client.close();
 
         return request;
     },
